@@ -1,0 +1,48 @@
+:root{
+  --mainColor: #8FD694;
+  --mainColorLight: #c5fbc8;
+  --textColor: #fff;
+  --secondColor: #fff;
+  --hoverColor: #000;
+}
+
+.footer {
+  width: 0 auto;
+  
+  /* Ajuste a altura conforme necessário */
+  background-color: var(--mainColor);
+  z-index: 10;
+}
+  
+  .social_list {
+   
+    
+    /* display: flex;
+    flex-direction: column;
+    align-items: flex-end; */
+    list-style-type: none;
+  }
+  
+  .social_list li {
+    margin: 0.8em;
+    color: #fff;
+  }
+  
+  .social_list li:hover {
+    color: #000;
+  }
+  
+  .social_list svg {
+    font-size: 2.3em;
+    cursor: pointer;
+  }
+  
+  .copy_right {
+    
+    text-align: center;
+  }
+  
+  .copy_right span {
+    font-weight: bold;
+    color: #fff;
+  }

@@ -1,0 +1,197 @@
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
+
+* {
+  font-family: "Dosis", sans-serif;
+  width: 0 auto;
+}
+
+html,
+body,
+#root {
+  background-color: #fff;
+}
+
+.bg-imagemHome {
+  background-image: url("components/img/imageHome.png");
+  background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o elemento */
+  background-position: top; /* Centraliza a imagem no elemento */
+  /* width: 0 auto; */
+}
+
+.bg-imagemSobreNos {
+  background-image: url("components/img/imageSobreNos.png");
+  background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o elemento */
+  background-position: center; /* Centraliza a imagem no elemento */
+  /* width: 0 auto; */
+}
+
+.bg-imagemContato {
+  background-image: url("components/img/imageContato.png");
+  background-size: cover; /* Ajusta o tamanho da imagem para cobrir todo o elemento */
+  background-position: center; /* Centraliza a imagem no elemento */
+  /* width: 0 auto; */
+}
+
+#tituloSobreNos{
+  color: rgba(255, 255, 255, 0.90);
+  font-family: 'Dosis', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 85vh;
+  font-size: 4rem;
+}
+
+#tituloContato{
+  color: rgba(255, 255, 255, 0.90);
+  font-family: 'Dosis', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 85vh;
+  font-size: 4rem;
+}
+
+.PageSobreNos{
+    overflow-x: hidden;
+}
+
+.PageHome{
+    overflow-x: hidden;
+}
+
+.PageContato{
+    overflow-x: hidden;
+}
+
+.PageLogin{
+    overflow-x: hidden;
+}
+
+.PageCadastro{
+    overflow-x: hidden;
+}
+
+.formulario{
+  color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+label {
+  font-weight: bold;
+  display: flex;
+  margin-bottom: 5px;
+}
+
+input{
+  display: block;
+  width: 400px;
+  padding: 6px 12px;
+  font-size: 14px;
+  line-height: 1.43;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.erro{
+  color:red;
+  font: 12px;
+  text-align: left;
+}
+
+.botaoSub {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  background-color: #e65100;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botaoLog {
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+  background-color: #3b9c58;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.botaoCont{
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 20px;
+  display: block;
+  background-color: #e65100;
+  color: #fff;
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.textoContato{
+  font-size: 20px;
+  margin-bottom: 10px;
+
+}
+
+.tema{
+  text-align: center;
+}
+
+.inputMsg{
+  width: 400px;
+  height: 250px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  resize: none;
+  vertical-align: top;
+  margin-bottom: 20px;
+}
+
+
+.whatsapp-button {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  width: 70px;
+  height: 70px;
+  background-color: #25d366;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0px 2px 5px 0px rgba(0, 0, 0, 0.25);
+  transition: transform 0.3s ease;
+  z-index: 9999;
+}
+
+.whatsapp-button:hover {
+  transform: scale(1.1);
+}
+
+.whatsapp-icon {
+  font-size: 50px;
+  filter: brightness(0) invert(1);
+}
