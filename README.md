@@ -1,2 +1,2 @@
 # UH Clínica
-Projeto da discplina COM212 - Gerência de Projeto deSoftware
+Projeto da disciplina COM212 - Gerência de Projeto de Software
