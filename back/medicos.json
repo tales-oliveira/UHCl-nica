@@ -1,3 +1,9 @@
 [
-
+  {
+    "nome": "Gustavo",
+    "sobrenome": "Noda",
+    "email": "gksnoda@hotmail.com",
+    "password": "123",
+    "IDregistro": "12345"
+  }
 ]

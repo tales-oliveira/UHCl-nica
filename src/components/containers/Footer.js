@@ -6,7 +6,7 @@ import logo from './logo_navbar.png'
 function Footer(){
     return(
         
-        <footer className='bg-greeny lg:h-[200px] min-[200px]:h-[400px]'>
+        <footer className='bg-greeny lg:h-[200px] min-[200px]:h-[400px] mt-20'>
             <div className='flex justify-center items-center align-middle min-[200px]:flex-col lg:flex-row lg:space-x-[600px]'>
                 <Link to='/'>
                     <img className='h-36 mr-[550px] min-[200px]:mr-0 min-[200px]:mb-12' src={logo} alt='logo' />

@@ -58,7 +58,7 @@ export default function CadastroTema(){
     return (
         <div className="flex justify-center items-center h-400 pt-30 mt-20">
             <div className="formulario-container mx-2">
-                <span className='mb-6 text-xl'>Cadastro de usuario comum</span>
+                <span className='mb-6 text-xl'>Cadastro de paciente</span>
                 <form onSubmit={handleSubmit(submitUsuarioComum)} noValidate>
                     <p className='erro'>{errors.nome?.message}</p>
                     <input type="text" id="nome" placeholder="Primeiro nome*" {...register('nome')} />

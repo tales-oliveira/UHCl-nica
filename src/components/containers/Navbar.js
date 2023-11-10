@@ -14,7 +14,7 @@ function Navbar() {
   };
 
   return (
-    <nav className="bg-greeny fixed w-screen flex justify-center items-center space-x-56 z-20">
+    <nav className="bg-greeny fixed w-screen flex justify-center items-center space-x-56 z-20 mb-5">
       {isDesktop ? (
         <div className="flex justify-center items-center space-x-96">
           <Link to="/">

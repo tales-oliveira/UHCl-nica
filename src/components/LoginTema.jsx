@@ -7,7 +7,7 @@ import * as yup from "yup";
 // eslint-disable-next-line
 import axios, * as others from 'axios';
 import { useState } from 'react';
-import { Link, Navigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 //as especificações da conta
 const schema = yup.object({
@@ -19,6 +19,7 @@ const schema = yup.object({
 export default function LoginTema(){
 
     const [msg, setMsg] = useState(' ');
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para rastrear o status de login
 
     const form = useForm({
         resolver: yupResolver(schema)
@@ -34,6 +35,7 @@ export default function LoginTema(){
             // eslint-disable-next-line
             const response = await axios.post('http://localhost:3000/login', data);
             setMsg('Usuário Autenticado');
+            setIsLoggedIn(true); // Atualiza o estado para indicar que o usuário está autenticado
             console.log(data)
         } catch (error) {
             console.log('Deu erro')
@@ -42,31 +44,41 @@ export default function LoginTema(){
         
     }
 
-    if(msg.includes('Usuário Autenticado')){
-        return <Navigate to='/' />
-    }
+    // if(msg.includes('Usuário Autenticado')){
+    //     return <Navigate to='/' />
+    // }
 
     return (
         <div className='formulario'>
-            <form onSubmit={handleSubmit(submit)} noValidate>
+            {isLoggedIn ? (
+                // Se estiver logado, exibe a mensagem de "Bem-vindo"
+                <div className='mt-10 mb-10 pt-20'>
+                    <p>Deletar conta</p>
+                    <p>Att conta</p>
+                </div>
+            ) : (
+                <form onSubmit={handleSubmit(submit)} noValidate>
+                    <h1 className="text-greeny justify-center text-7xl mb-12 mt-56">
+                    Log in
+                    </h1>
 
-            <p className='erro'>{errors.email?.message}</p>
-            <input type="text" id="email" placeholder="E-mail*" {...register('email')} />
+                    <p className='erro'>{errors.email?.message}</p>
+                    <input type="text" id="email" placeholder="E-mail*" {...register('email')} />
 
-            <p className='erro'>{errors.password?.message}</p>
-            <input type="password" id="password" placeholder="Senha*" {...register('password')} />
+                    <p className='erro'>{errors.password?.message}</p>
+                    <input type="password" id="password" placeholder="Senha*" {...register('password')} />
 
-            <p className="server-response">{msg}</p>
-            <button className='botaoLog'>Entrar</button>
-            </form>
+                    <p className="server-response">{msg}</p>
+                    <button className='botaoLog'>Entrar</button>
+
+                    <div>
+                    Não possui conta? 
+                    <Link to="/cadastro"> Clique aqui!</Link>
+                    </div>
+                </form>
+            )}
             {/* <DevTool control={control}/> */}
-            <div>
-                Não possui conta? 
-                <Link to="/cadastro"> Clique aqui!</Link>
-            </div>
-            
-            
         </div>
-    )
+    );
 
 }
