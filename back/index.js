@@ -4,6 +4,7 @@ const fs = require('fs');
 const cors = require('cors');
 
 const User = require('./models/User.js');
+const Medico = require('./models/Medico.js');
 
 app.use(express.json());
 app.use(cors());
@@ -14,12 +15,14 @@ app.post('/cadastro', async (req,res) => {
 
 
     //extraindo os dados do formulário para criacao do usuario
-    const {nome, sobrenome, email, password} = req.body;
+    const {nome, sobrenome, email, password, tipoUsuario} = req.body;
     //Para facilitar já estamos considerando as validações feitas no front
     //agora vamos verificar se já existe usuário com esse e-mail
     
     //aqui ele ta abrindo o arquivo com as contas ja criadas
     const usuariosCadastrados = JSON.parse(fs.readFileSync('contas.json', { encoding: 'utf8', flag: 'r' }));
+    const medicosCadastrados = JSON.parse(fs.readFileSync('medicos.json', { encoding: 'utf8', flag: 'r' }));
+    const pacientesCadastrados = JSON.parse(fs.readFileSync('pacientes.json', { encoding: 'utf8', flag: 'r' }));
     
     for (let users of usuariosCadastrados){
         if(users.email === email){
@@ -29,12 +32,24 @@ app.post('/cadastro', async (req,res) => {
         }   
     }
 
-    //Criacao do user
-    const user = new User(nome, sobrenome, email, password);
+    let novo;
+    if (tipoUsuario === 'paciente') {
+        novo = new User(nome, sobrenome, email, password);
+        pacientesCadastrados.push(novo);
+        fs.writeFileSync('pacientes.json',JSON.stringify(pacientesCadastrados,null,2));
+    } 
+    else if (tipoUsuario === 'medico') {
+        const { IDregistro } = req.body;
+        novo = new Medico(nome, sobrenome, email, password, IDregistro);
+        medicosCadastrados.push(novo);
+        fs.writeFileSync('medicos.json',JSON.stringify(medicosCadastrados,null,2));
+    } else {
+        return res.status(400).send('Tipo de usuário inválido.');
+    }
 
     //Salva user no "banco"
     // é necessario iniciar o arquivo json com [] (uma lista vazia)
-    usuariosCadastrados.push(user);
+    usuariosCadastrados.push(novo);
     fs.writeFileSync('contas.json',JSON.stringify(usuariosCadastrados,null,2));
     res.send(`Conta criado com sucesso.`);
 });

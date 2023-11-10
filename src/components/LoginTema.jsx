@@ -30,7 +30,6 @@ export default function LoginTema(){
 
     const submit = async (data) => {
         
-        console.log('entrououou')
         try {
             // eslint-disable-next-line
             const response = await axios.post('http://localhost:3000/login', data);
