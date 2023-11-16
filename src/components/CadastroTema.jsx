@@ -110,7 +110,7 @@ export default function CadastroTema(){
                 </form>
                 {/* A parte aqui de baixo serve para verificar se os dados estão dando certo */}
                 {/* Mas vou desativar pq ja deu tudo certo */}
-                <DevTool control={control}/>
+                {/* <DevTool control={control}/> */}
                 <p>{msg}</p>
             </div>
         </div>

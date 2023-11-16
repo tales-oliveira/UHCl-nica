@@ -12,6 +12,8 @@ const AlterarLogin = ({ isOpen, onClose }) => {
     novaSenha: '',
   });
 
+  const [atualizadoComSucesso, setAtualizadoComSucesso] = useState(false);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNovosDados((prevDados) => ({
@@ -22,17 +24,17 @@ const AlterarLogin = ({ isOpen, onClose }) => {
 
   const handleSubmit = async () => {
     try {
-        const response = await axios.post('http://localhost:3000/alterar', novosDados);
-    
-        // Se a requisição for bem-sucedida, a resposta estará em response.data
-        console.log('Alterações salvas com sucesso!', response.data);
-    
-        // Fechar o modal após o envio
-        onClose();
+        setAtualizadoComSucesso(true);
+        await axios.post('http://localhost:3000/alterar', novosDados);
       } catch (error) {
-        // Se houver um erro, você pode lidar com isso aqui
         console.error('Erro ao salvar alterações:', error);
       }
+    };
+
+    const fecharAtualizadoComSucesso = () => {
+        // Fecha a mensagem de sucesso e reseta o estado
+        setAtualizadoComSucesso(false);
+        onClose();
     };
 
   return (
@@ -54,29 +56,40 @@ const AlterarLogin = ({ isOpen, onClose }) => {
         <Typography variant="h6" component="div">
           Alterar Informações
         </Typography>
-        <form>
-          <label>Email:</label>
-          <input
-            type="text"
-            name="novoEmail"
-            value={novosDados.novoEmail}
-            onChange={handleInputChange}
-            style={{ width: '100%' }} // Define a largura do campo de entrada
-          />
-          <br />
-          <label>Senha:</label>
-          <input
-            type="password"
-            name="novaSenha"
-            value={novosDados.novaSenha}
-            onChange={handleInputChange}
-            style={{ width: '100%' }} // Define a largura do campo de entrada
-          />
-          <br />
-          <Button variant="contained" onClick={handleSubmit}>
-            Salvar Alterações
-          </Button>
-        </form>
+        {atualizadoComSucesso ? (
+          <>
+            <Typography variant="body1" gutterBottom>
+              Atualizado com sucesso!
+            </Typography>
+            <Button variant="contained" color="primary" onClick={fecharAtualizadoComSucesso}>
+              Fechar
+            </Button>
+          </>
+        ) : (
+          <form>
+            <label>Email:</label>
+            <input
+              type="text"
+              name="novoEmail"
+              value={novosDados.novoEmail}
+              onChange={handleInputChange}
+              style={{ width: '100%' }} // Define a largura do campo de entrada
+            />
+            <br />
+            <label>Senha:</label>
+            <input
+              type="password"
+              name="novaSenha"
+              value={novosDados.novaSenha}
+              onChange={handleInputChange}
+              style={{ width: '100%' }} // Define a largura do campo de entrada
+            />
+            <br />
+            <Button variant="contained" onClick={handleSubmit}>
+              Salvar Alterações
+            </Button>
+          </form>
+        )}
       </Box>
     </Modal>
   );

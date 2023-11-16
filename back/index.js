@@ -91,9 +91,7 @@ app.post('/alterar', (req, res) => {
 app.post('/excluir', (req, res) => {
     // Recebe o valor booleano do corpo da solicitação
 
-    
-    // Por enquanto, apenas enviamos uma resposta de sucesso
-    res.status(200);
+    console.log('excluido');
   });
 app.listen(3000, () => {
     console.log('Servidor na porta 3000');

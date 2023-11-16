@@ -38,7 +38,6 @@ export default function LoginTema(){
             const response = await axios.post('http://localhost:3000/login', data);
             setMsg('Usuário Autenticado');
             setIsLoggedIn(true); // Atualiza o estado para indicar que o usuário está autenticado
-            console.log(data)
         } catch (error) {
             console.log('Deu erro')
             setMsg(error.response.data);
