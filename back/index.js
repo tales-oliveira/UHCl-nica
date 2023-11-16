@@ -8,7 +8,8 @@ const Medico = require('./models/Medico.js');
 
 app.use(express.json());
 app.use(cors());
-
+// eslint-disable-next-line no-unused-vars
+let antigo;
 
 //Requisicao com POST publica para criar usuário
 app.post('/cadastro', async (req,res) => {
@@ -59,7 +60,7 @@ app.post('/cadastro', async (req,res) => {
 app.post('/login', async (req,res) => {
 
     //extraindo os dados do formulário para criacao do usuario
-    const {email, password} = req.body; 
+    const {email, password} = req.body;
 
     //Abre o bd (aqui estamos simulando com arquivo)
     const usuariosCadastrados = JSON.parse(fs.readFileSync('contas.json', { encoding: 'utf8', flag: 'r' }));
@@ -69,6 +70,7 @@ app.post('/login', async (req,res) => {
         if(user.email === email){
             //usuario existe. Agora é verificar a senha
             if(user.password === password){
+                antigo = user.email;
                 return res.send('Entrouu!')
             }
             return res.status(422).send(`senha incorreta.`);
@@ -79,7 +81,20 @@ app.post('/login', async (req,res) => {
 
 })
 
+app.post('/alterar', (req, res) => {
+    const { novoEmail, novaSenha } = req.body;
+    console.log(novoEmail, novaSenha);
 
+    res.status(200);
+  });
+
+app.post('/excluir', (req, res) => {
+    // Recebe o valor booleano do corpo da solicitação
+
+    
+    // Por enquanto, apenas enviamos uma resposta de sucesso
+    res.status(200);
+  });
 app.listen(3000, () => {
     console.log('Servidor na porta 3000');
 });

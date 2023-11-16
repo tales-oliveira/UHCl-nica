@@ -8,6 +8,7 @@ import * as yup from "yup";
 import axios, * as others from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import Engrenagem from './Engrenagem';
 
 //as especificações da conta
 const schema = yup.object({
@@ -19,6 +20,7 @@ const schema = yup.object({
 export default function LoginTema(){
 
     const [msg, setMsg] = useState(' ');
+
     const [isLoggedIn, setIsLoggedIn] = useState(false); // Estado para rastrear o status de login
 
     const form = useForm({
@@ -44,17 +46,11 @@ export default function LoginTema(){
         
     }
 
-    // if(msg.includes('Usuário Autenticado')){
-    //     return <Navigate to='/' />
-    // }
-
     return (
         <div className='formulario'>
             {isLoggedIn ? (
-                // Se estiver logado, exibe a mensagem de "Bem-vindo"
                 <div className='mt-10 mb-10 pt-20'>
-                    <p>Deletar conta</p>
-                    <p>Att conta</p>
+                    <Engrenagem />
                 </div>
             ) : (
                 <form onSubmit={handleSubmit(submit)} noValidate>
@@ -77,7 +73,6 @@ export default function LoginTema(){
                     </div>
                 </form>
             )}
-            {/* <DevTool control={control}/> */}
         </div>
     );
 

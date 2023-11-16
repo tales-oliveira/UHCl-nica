@@ -1,8 +1,8 @@
 [
   {
-    "nome": "Gustavo",
-    "sobrenome": "Noda",
-    "email": "gksnoda@hotmail.com",
+    "nome": "Teste",
+    "sobrenome": "admin",
+    "email": "admin@hotmail.com",
     "password": "123",
     "IDregistro": "12345"
   }
