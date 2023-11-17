@@ -9,6 +9,7 @@ import axios, * as others from 'axios';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import Engrenagem from './Engrenagem';
+import Agenda from './Agenda';
 
 //as especificações da conta
 const schema = yup.object({
@@ -50,6 +51,7 @@ export default function LoginTema(){
             {isLoggedIn ? (
                 <div className='mt-10 mb-10 pt-20'>
                     <Engrenagem />
+                    <Agenda />
                 </div>
             ) : (
                 <form onSubmit={handleSubmit(submit)} noValidate>
