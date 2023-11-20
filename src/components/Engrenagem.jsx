@@ -1,3 +1,5 @@
+// Engrenagem.jsx
+
 import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -5,11 +7,14 @@ import MenuItem from '@mui/material/MenuItem';
 import SettingsIcon from '@mui/icons-material/Settings';
 import ExcluirLogin from './ExcluirLogin';
 import AlterarLogin from './AlterarLogin';
+import Prontuario from './Prontuario';
 
 const Engrenagem = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [excluirModalAberto, setExcluirModalAberto] = useState(false);
   const [alterarModalAberto, setAlterarModalAberto] = useState(false);
+  const [prontuarioModalAberto, setProntuarioModalAberto] = useState(false);
+  const [prontuarioDados, setProntuarioDados] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,32 +25,50 @@ const Engrenagem = () => {
   };
 
   const handleAlterar = () => {
-    // Abre o modal "Alterar" quando a opção "Alterar" é clicada
     setAlterarModalAberto(true);
     handleClose();
   };
 
   const handleExcluir = () => {
-    // Abre o modal de confirmação quando "Excluir" é clicado
     setExcluirModalAberto(true);
     handleClose();
   };
 
+  const handleProntuario = () => {
+    // Simplesmente mostra as informações se o modal do prontuário estiver fechado
+    if (!prontuarioModalAberto) {
+      setProntuarioDados({
+        alergias: 'Informação de exemplo de alergias',
+        medicamentos: 'Informação de exemplo de medicamentos',
+        tipoSanguineo: 'O+',
+      });
+    }
+
+    setProntuarioModalAberto(true);
+    handleClose();
+  };
+
+  const handleProntuarioAtualizar = (novosDados) => {
+    // Lógica para atualizar os dados no backend
+    console.log('Dados atualizados no backend:', novosDados);
+  };
 
   const fecharExcluirModal = () => {
-    // Fechar o modal de confirmação se o usuário cancelar
     setExcluirModalAberto(false);
   };
 
   const fecharAlterarModal = () => {
-    // Fechar o modal "Alterar" se o usuário cancelar
     setAlterarModalAberto(false);
+  };
+
+  const fecharProntuarioModal = () => {
+    setProntuarioModalAberto(false);
   };
 
   return (
     <div className="fixed left-0 p-4">
       <IconButton onClick={handleClick}>
-        <SettingsIcon fontSize="large"/>
+        <SettingsIcon fontSize="large" />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -54,18 +77,16 @@ const Engrenagem = () => {
       >
         <MenuItem onClick={handleAlterar}>Alterar</MenuItem>
         <MenuItem onClick={handleExcluir}>Excluir</MenuItem>
+        <MenuItem onClick={handleProntuario}>Prontuário</MenuItem>
       </Menu>
 
-      {/* Renderiza o modal "Excluir" */}
-      <ExcluirLogin
-        isOpen={excluirModalAberto}
-        onClose={fecharExcluirModal}
-      />
-
-      {/* Renderiza o modal "Alterar" */}
-      <AlterarLogin
-        isOpen={alterarModalAberto}
-        onClose={fecharAlterarModal}
+      <ExcluirLogin isOpen={excluirModalAberto} onClose={fecharExcluirModal} />
+      <AlterarLogin isOpen={alterarModalAberto} onClose={fecharAlterarModal} />
+      <Prontuario
+        isOpen={prontuarioModalAberto}
+        onClose={fecharProntuarioModal}
+        dadosProntuario={prontuarioDados}
+        onAtualizar={handleProntuarioAtualizar}
       />
     </div>
   );
