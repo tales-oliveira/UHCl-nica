@@ -7,6 +7,8 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { List, ListItem, ListItemText } from '@mui/material';
+import axios from 'axios';
+import moment from 'moment-timezone';
 
 const Agenda = () => {
     const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -21,19 +23,25 @@ const Agenda = () => {
       setInfoTexto(e.target.value);
     };
   
-    const handleSave = () => {
+    const handleSave = async () => {
       if (selectedDateTime && infoTexto.trim() !== '') {
+        const formattedDateTime = moment(selectedDateTime).utc().format();
+
         const newData = {
-          dateTime: selectedDateTime,
+          dateTime: formattedDateTime,
           text: infoTexto.trim(),
         };
   
+
         // Adiciona a nova entrada à lista de dados salvos
         setSavedData((prevData) => [...prevData, newData]);
   
         // Limpa os campos após salvar
         setSelectedDateTime(null);
         setInfoTexto('');
+
+        console.log(newData);
+        await axios.post('http://localhost:3000/agenda', {newData});
       }
     };
   

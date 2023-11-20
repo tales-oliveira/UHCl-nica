@@ -5,6 +5,7 @@ const cors = require('cors');
 
 const User = require('./models/User.js');
 const Medico = require('./models/Medico.js');
+const moment = require('moment');
 
 app.use(express.json());
 app.use(cors());
@@ -81,18 +82,41 @@ app.post('/login', async (req,res) => {
 
 })
 
+
 app.post('/alterar', (req, res) => {
     const { novoEmail, novaSenha } = req.body;
     console.log(novoEmail, novaSenha);
 
     res.status(200);
-  });
+});
+
 
 app.post('/excluir', (req, res) => {
-    // Recebe o valor booleano do corpo da solicitação
 
     console.log('excluido');
-  });
+});
+
+
+app.post('/prontuario', (req, res) => {
+    const { alergias, medicamentos, tipoSanguineo } = req.body;
+    console.log( alergias, medicamentos, tipoSanguineo);
+});
+
+
+
+app.post('/agenda', (req, res) => {
+  const { newData } = req.body;
+
+  // Formate a data para incluir apenas a data e a hora
+  const formattedDateTime = moment(newData.dateTime).format('YYYY-MM-DDTHH:mm:ss');
+
+  console.log('Data formatada:', formattedDateTime);
+  console.log('Texto:', newData.text);
+  // Faça o que for necessário com a data formatada e o texto
+});
+
+
+
 app.listen(3000, () => {
     console.log('Servidor na porta 3000');
 });

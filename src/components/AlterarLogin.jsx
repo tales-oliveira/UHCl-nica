@@ -31,11 +31,11 @@ const AlterarLogin = ({ isOpen, onClose }) => {
       }
     };
 
-    const fecharAtualizadoComSucesso = () => {
+  const fecharAtualizadoComSucesso = () => {
         // Fecha a mensagem de sucesso e reseta o estado
         setAtualizadoComSucesso(false);
         onClose();
-    };
+  };
 
   return (
     <Modal open={isOpen} onClose={onClose}>

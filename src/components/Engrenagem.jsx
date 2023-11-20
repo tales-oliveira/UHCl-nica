@@ -1,5 +1,3 @@
-// Engrenagem.jsx
-
 import React, { useState } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Menu from '@mui/material/Menu';
@@ -14,7 +12,8 @@ const Engrenagem = () => {
   const [excluirModalAberto, setExcluirModalAberto] = useState(false);
   const [alterarModalAberto, setAlterarModalAberto] = useState(false);
   const [prontuarioModalAberto, setProntuarioModalAberto] = useState(false);
-  const [prontuarioDados, setProntuarioDados] = useState(null);
+
+  const [dadosProntuario, setDadosProntuario] = useState(null);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -35,22 +34,8 @@ const Engrenagem = () => {
   };
 
   const handleProntuario = () => {
-    // Simplesmente mostra as informações se o modal do prontuário estiver fechado
-    if (!prontuarioModalAberto) {
-      setProntuarioDados({
-        alergias: 'Informação de exemplo de alergias',
-        medicamentos: 'Informação de exemplo de medicamentos',
-        tipoSanguineo: 'O+',
-      });
-    }
-
     setProntuarioModalAberto(true);
     handleClose();
-  };
-
-  const handleProntuarioAtualizar = (novosDados) => {
-    // Lógica para atualizar os dados no backend
-    console.log('Dados atualizados no backend:', novosDados);
   };
 
   const fecharExcluirModal = () => {
@@ -65,16 +50,16 @@ const Engrenagem = () => {
     setProntuarioModalAberto(false);
   };
 
+  const atualizarDadosProntuario = (novosDados) => {
+    setDadosProntuario(novosDados);
+  };
+
   return (
     <div className="fixed left-0 p-4">
       <IconButton onClick={handleClick}>
         <SettingsIcon fontSize="large" />
       </IconButton>
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleClose}
-      >
+      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleClose}>
         <MenuItem onClick={handleAlterar}>Alterar</MenuItem>
         <MenuItem onClick={handleExcluir}>Excluir</MenuItem>
         <MenuItem onClick={handleProntuario}>Prontuário</MenuItem>
@@ -85,8 +70,8 @@ const Engrenagem = () => {
       <Prontuario
         isOpen={prontuarioModalAberto}
         onClose={fecharProntuarioModal}
-        dadosProntuario={prontuarioDados}
-        onAtualizar={handleProntuarioAtualizar}
+        dadosProntuario={dadosProntuario}
+        onAtualizar={atualizarDadosProntuario}
       />
     </div>
   );

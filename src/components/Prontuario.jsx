@@ -1,11 +1,10 @@
-// Prontuario.jsx
-
 import React, { useState, useEffect } from 'react';
 import Modal from '@mui/material/Modal';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 
 const Prontuario = ({ isOpen, onClose, dadosProntuario, onAtualizar }) => {
   const [alergias, setAlergias] = useState('');
@@ -26,19 +25,30 @@ const Prontuario = ({ isOpen, onClose, dadosProntuario, onAtualizar }) => {
   };
 
   const handleFechar = () => {
-    onClose();
+    // Se estiver no modo de atualização, volta para o modo de visualização
+    if (modoAtualizacao) {
+      setModoAtualizacao(false);
+    } else {
+      onClose();
+    }
   };
 
-  const handleSalvar = () => {
-    // Lógica para salvar as novas informações
-    onAtualizar({
-      alergias: alergias,
-      medicamentos: medicamentos,
-      tipoSanguineo: tipoSanguineo,
-    });
+  const handleSalvar = async () => {
+    // Crie um objeto com os dados do prontuário
+    const dadosProntuario = {
+      alergias,
+      medicamentos,
+      tipoSanguineo,
+    };
 
-    setModoAtualizacao(false);
-    onClose();
+    try {
+      onAtualizar(dadosProntuario);
+      await axios.post('http://localhost:3000/prontuario', dadosProntuario);
+    } catch (error) {
+      console.error('Erro ao salvar prontuário:', error);
+    } finally {
+        setModoAtualizacao(false);
+    }
   };
 
   return (
@@ -66,7 +76,7 @@ const Prontuario = ({ isOpen, onClose, dadosProntuario, onAtualizar }) => {
           value={alergias}
           onChange={(e) => setAlergias(e.target.value)}
           disabled={!modoAtualizacao}
-          sx={{ mb: 2 }} // Adiciona espaçamento inferior
+          sx={{ mb: 2 }}
           InputLabelProps={{ sx: { color: 'black' } }}
         />
         <TextField
@@ -75,7 +85,7 @@ const Prontuario = ({ isOpen, onClose, dadosProntuario, onAtualizar }) => {
           value={medicamentos}
           onChange={(e) => setMedicamentos(e.target.value)}
           disabled={!modoAtualizacao}
-          sx={{ mb: 2 }} // Adiciona espaçamento inferior
+          sx={{ mb: 2 }}
           InputLabelProps={{ sx: { color: 'black' } }}
         />
         <TextField
