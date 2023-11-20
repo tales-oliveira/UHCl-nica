@@ -2,6 +2,7 @@ const express = require('express');
 const app = express();
 const fs = require('fs');
 const cors = require('cors');
+const { Pool } = require('pg');
 
 const User = require('./models/User.js');
 const Medico = require('./models/Medico.js');
@@ -11,89 +12,159 @@ app.use(express.json());
 app.use(cors());
 // eslint-disable-next-line no-unused-vars
 let antigo;
+let email_atual;
+let tipo_atual;
+
+// ------------------------------------------------------------------
+// Conectando com o banco
+const pool = new Pool({
+    user: 'postgres',
+    host: 'localhost',
+    database: 'UHClinica',
+    password: 'root',
+    port: 5432,
+});
+
+pool.connect()
+    .then(() => console.log('Connected to the database'))
+    .catch((err) => console.error('Error connecting to the database:', err)
+);
+// ------------------------------------------------------------------
 
 //Requisicao com POST publica para criar usuário
 app.post('/cadastro', async (req,res) => {
+    try{
+        //extraindo os dados do formulário para criacao do usuario
+        const {nome, sobrenome, email, password, tipoUsuario} = req.body;
+        //Para facilitar já estamos considerando as validações feitas no front
 
+        let novo;
+        if (tipoUsuario === 'paciente') {
+            // Verifica se o email cadastrado já existe no banco
+            try{
+                const result = await pool.query('SELECT * FROM pacientes WHERE email = $1', [email]);
+                if (result.rows.length > 0){
+                    return res.status(409).send(`Email '${email}' já existe no banco.`);
+                }
+            }catch (error){
+                console.error('Error in database query:', error);
+                res.status(500).send('Erro interno no servidor 2.');
+            }
 
-    //extraindo os dados do formulário para criacao do usuario
-    const {nome, sobrenome, email, password, tipoUsuario} = req.body;
-    //Para facilitar já estamos considerando as validações feitas no front
-    //agora vamos verificar se já existe usuário com esse e-mail
-    
-    //aqui ele ta abrindo o arquivo com as contas ja criadas
-    const usuariosCadastrados = JSON.parse(fs.readFileSync('contas.json', { encoding: 'utf8', flag: 'r' }));
-    const medicosCadastrados = JSON.parse(fs.readFileSync('medicos.json', { encoding: 'utf8', flag: 'r' }));
-    const pacientesCadastrados = JSON.parse(fs.readFileSync('pacientes.json', { encoding: 'utf8', flag: 'r' }));
-    
-    for (let users of usuariosCadastrados){
-        if(users.email === email){
-            //usuario já existe. Impossivel criar outro
-            //Retornando o erro 409 para indicar conflito
-            return res.status(409).send(`Conta com email '${email}' já existe.`);
-        }   
+            // Caso o e-mail não exista no banco, o usuário é cadastrado
+            novo = new User(nome, sobrenome, email, password);
+            await pool.query('INSERT INTO pacientes (nome, sobrenome, email, senha) VALUES ($1, $2, $3, $4)', [
+                nome,
+                sobrenome,
+                email,
+                password
+            ]);
+            
+            res.send(`Paciente cadastrado com sucesso.`);
+        }
+
+        else if (tipoUsuario === 'medico'){
+            const { IDregistro } = req.body;
+
+            // Verifica se o email cadastrado já existe no banco
+            try{
+                
+                const result = await pool.query('SELECT * FROM medicos WHERE email = $1', [email]);
+                if (result.rows.length > 0){
+                    return res.status(409).send(`Email '${email}' já existe no banco.`);
+                }
+            }catch (error){
+                console.error('Error in database query:', error);
+                res.status(500).send('Erro interno no servidor 2.');
+            }
+
+            // Caso o e-mail não exista no banco, o usuário é cadastrado
+            novo = new Medico(IDregistro, nome, sobrenome, email, password);
+            await pool.query('INSERT INTO medicos (id_registro, nome, sobrenome, email, senha) VALUES ($1, $2, $3, $4, $5)', [
+                IDregistro,
+                nome,
+                sobrenome,
+                email,
+                password,
+            ]);
+            
+            res.send(`Médico cadastrado com sucesso.`);
+        }
+
+        else{
+            return res.status(400).send('Tipo de usuário inválido.');
+        }
+
+    }catch (error){
+        console.error('Error creating account:', error);
+        console.error('Stack trace:', error.stack);
+        res.status(500).send('Erro interno no servidor 1.');
     }
-
-    let novo;
-    if (tipoUsuario === 'paciente') {
-        novo = new User(nome, sobrenome, email, password);
-        pacientesCadastrados.push(novo);
-        fs.writeFileSync('pacientes.json',JSON.stringify(pacientesCadastrados,null,2));
-    } 
-    else if (tipoUsuario === 'medico') {
-        const { IDregistro } = req.body;
-        novo = new Medico(nome, sobrenome, email, password, IDregistro);
-        medicosCadastrados.push(novo);
-        fs.writeFileSync('medicos.json',JSON.stringify(medicosCadastrados,null,2));
-    } else {
-        return res.status(400).send('Tipo de usuário inválido.');
-    }
-
-    //Salva user no "banco"
-    // é necessario iniciar o arquivo json com [] (uma lista vazia)
-    usuariosCadastrados.push(novo);
-    fs.writeFileSync('contas.json',JSON.stringify(usuariosCadastrados,null,2));
-    res.send(`Conta criado com sucesso.`);
 });
 
 
 //Requisicao com POST para fazer o login
 app.post('/login', async (req,res) => {
-
     //extraindo os dados do formulário para criacao do usuario
     const {email, password} = req.body;
 
-    //Abre o bd (aqui estamos simulando com arquivo)
-    const usuariosCadastrados = JSON.parse(fs.readFileSync('contas.json', { encoding: 'utf8', flag: 'r' }));
+    email_atual = email;
 
-    //verifica se existe usuario com email    
-    for (let user of usuariosCadastrados){
-        if(user.email === email){
-            //usuario existe. Agora é verificar a senha
-            if(user.password === password){
-                antigo = user.email;
-                return res.send('Entrouu!')
-            }
-            return res.status(422).send(`senha incorreta.`);
-        }   
+    //Abre o bd 
+    const memail = await pool.query('SELECT * FROM medicos WHERE email = $1', [email]);
+    if(memail.rows.length > 0){
+        const msenha = await pool.query('SELECT * FROM medicos WHERE senha = $1', [password]);
+        if(msenha.rows.length > 0){
+            antigo = memail.email;
+            return res.send('Entrou!');
+        }else{
+            return res.status(422).send(`Senha incorreta.`);
+        }
+    }else{
+        //Nesse ponto não existe usuario com email informado.
+        return res.status(409).send(`Usuario com email '${email}' não existe.`);    
     }
-    //Nesse ponto não existe usuario com email informado.
-    return res.status(409).send(`Usuario com email '${email}' não existe.`);
-
 })
 
-
-app.post('/alterar', (req, res) => {
+//Requisicao com POST para fazer o update nas tabelas
+app.post('/alterar', async (req, res) => {
     const { novoEmail, novaSenha } = req.body;
-    console.log(novoEmail, novaSenha);
+    //console.log(novoEmail, novaSenha);
 
-    res.status(200);
+    //await pool.query('SELECT id_registro FROM medicos WHERE email = $1', [email_atual]);
+    //console.log(m_id);
+    
+    try {
+        //const idmed = await pool.query('SELECT * FROM medicos WHERE email = $1 AND id_registro != $2', [novoEmail, IDregistro]);
+
+        // Verifica se o novo email desejado já existe no banco
+        const emailResult = await pool.query('SELECT * FROM medicos WHERE email = $1', [novoEmail]);
+        if (emailResult.rows.length > 0) {
+            return res.status(409).send(`O novo email '${novoEmail}' já está em uso.`);
+            //console.log(emailResult.id_registro);
+        }
+
+        // Atualiza a email e/ou senha
+        const updateResult = await pool.query('UPDATE medicos SET email = $1, senha = $2 WHERE email = $3', [novoEmail, novaSenha, email_atual]);
+
+        if (updateResult.rowCount > 0) {
+            return res.send('Atualização realizada com sucesso!');
+            //console.log(medicoId);
+        } else {
+            return res.status(500).send('Não foi possível realizar a atualização.');
+        }
+    }catch (error){
+        console.error('Erro na atualização:', error);
+        return res.status(500).send('Erro interno no servidor.');
+    }
+
+    //res.status(200);
 });
 
-
+//Requisicao com POST para fazer o delete nas tabelas
 app.post('/excluir', (req, res) => {
-
-    console.log('excluido');
+    pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
+    console.log('Excluído');
 });
 
 
@@ -101,7 +172,6 @@ app.post('/prontuario', (req, res) => {
     const { alergias, medicamentos, tipoSanguineo } = req.body;
     console.log( alergias, medicamentos, tipoSanguineo);
 });
-
 
 
 app.post('/agenda', (req, res) => {
@@ -114,8 +184,6 @@ app.post('/agenda', (req, res) => {
   console.log('Texto:', newData.text);
   // Faça o que for necessário com a data formatada e o texto
 });
-
-
 
 app.listen(3000, () => {
     console.log('Servidor na porta 3000');
