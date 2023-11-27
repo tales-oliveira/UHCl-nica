@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 // eslint-disable-next-line
 import { DevTool } from '@hookform/devtools';
 import {useForm} from 'react-hook-form';
