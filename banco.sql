@@ -15,3 +15,19 @@ sobrenome varchar(20) not null,
 email varchar(30) unique not null,
 senha varchar(20) not null
 )
+
+create table consultas(
+id_consulta serial primary key,
+data_consulta date,
+hora time,
+descricao varchar(100)
+)
+
+create table prontuario(
+number int primary key,
+alergias text[],
+medicamentos text[],
+tipo_sanguineo varchar[3],
+id_paciente int,
+foreign key(id_paciente) references pacientes (id_user)
+)

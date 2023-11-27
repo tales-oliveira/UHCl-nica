@@ -110,7 +110,7 @@ app.post('/login', async (req,res) => {
 
     email_atual = email;
 
-    //Abre o bd 
+    // Verifica os médicos
     const memail = await pool.query('SELECT * FROM medicos WHERE email = $1', [email]);
     if(memail.rows.length > 0){
         const msenha = await pool.query('SELECT * FROM medicos WHERE senha = $1', [password]);
@@ -120,11 +120,26 @@ app.post('/login', async (req,res) => {
         }else{
             return res.status(422).send(`Senha incorreta.`);
         }
-    }else{
+    }
+
+    // Verifica os pacientes
+    const pemail = await pool.query('SELECT * FROM pacientes WHERE email = $1', [email]);
+    if(pemail.rows.length > 0){
+        const msenha = await pool.query('SELECT * FROM pacientes WHERE senha = $1', [password]);
+        if(msenha.rows.length > 0){
+            antigo = pemail.email;
+            return res.send('Entrou!');
+        }else{
+            return res.status(422).send(`Senha incorreta.`);
+        }
+    }
+
+    else{
         //Nesse ponto não existe usuario com email informado.
-        return res.status(409).send(`Usuario com email '${email}' não existe.`);    
+        return res.status(409).send(`E-mail '${email}' não cadastrado no banco.`);    
     }
 })
+
 
 //Requisicao com POST para fazer o update nas tabelas
 app.post('/alterar', async (req, res) => {
@@ -135,8 +150,8 @@ app.post('/alterar', async (req, res) => {
     //console.log(m_id);
     
     try {
-        //const idmed = await pool.query('SELECT * FROM medicos WHERE email = $1 AND id_registro != $2', [novoEmail, IDregistro]);
-
+        // ----------------------------------------------------------------------------------------
+        // MÉDICOS
         // Verifica se o novo email desejado já existe no banco
         const emailResult = await pool.query('SELECT * FROM medicos WHERE email = $1', [novoEmail]);
         if (emailResult.rows.length > 0) {
@@ -153,6 +168,28 @@ app.post('/alterar', async (req, res) => {
         } else {
             return res.status(500).send('Não foi possível realizar a atualização.');
         }
+        // ----------------------------------------------------------------------------------------
+
+        // ----------------------------------------------------------------------------------------
+        // PACIENTES
+        // Verifica se o novo email desejado já existe no banco
+        emailResult = await pool.query('SELECT * FROM pacientes WHERE email = $1', [novoEmail]);
+        if (emailResult.rows.length > 0) {
+            return res.status(409).send(`O novo email '${novoEmail}' já está em uso.`);
+            //console.log(emailResult.id_registro);
+        }
+
+        // Atualiza a email e/ou senha
+        updateResult = await pool.query('UPDATE pacientes SET email = $1, senha = $2 WHERE email = $3', [novoEmail, novaSenha, email_atual]);
+
+        if (updateResult.rowCount > 0) {
+            return res.send('Atualização realizada com sucesso!');
+            //console.log(medicoId);
+        } else {
+            return res.status(500).send('Não foi possível realizar a atualização.');
+        }
+        // ----------------------------------------------------------------------------------------
+
     }catch (error){
         console.error('Erro na atualização:', error);
         return res.status(500).send('Erro interno no servidor.');
@@ -161,33 +198,57 @@ app.post('/alterar', async (req, res) => {
     //res.status(200);
 });
 
+
 //Requisicao com POST para fazer o delete nas tabelas
 app.post('/excluir', async (req, res) => {
     await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
+    await pool.query('DELETE FROM pacientes WHERE email = $1', [email_atual]);
     console.log('Excluído');
 });
 
-
-app.post('/prontuario', (req, res) => {
+//Requisição para os prontuários
+app.post('/prontuario', async (req, res) => {
     const { alergias, medicamentos, tipoSanguineo } = req.body;
+
+    //const id_atual = await pool.query('SELECT id_user FROM pacientes WHERE email = $1', [email_atual]);
+    
+    // Run the query to select the id_user from the pacientes table
+    const query = 'SELECT id_user FROM pacientes WHERE email = $1';
+    const result = await pool.query(query, [email_atual]);
+    // Check if the query returned any rows
+    if (result.rows.length === 0) {
+      throw new Error('No results found for the given email.');
+    }
+
+    // Extract and store the id_user in id_atual
+    const id_atual = result.rows[0].id_user;
+
+
+    console.log(id_atual);
     console.log( alergias, medicamentos, tipoSanguineo);
 });
 
+//Requisição para a agenda
+app.post('/agenda', async (req, res) => {
+    const { newData } = req.body;
 
-app.post('/agenda', (req, res) => {
-  const { newData } = req.body;
+    // Formate a data para incluir apenas a data e a hora
+    const formattedDateTime = moment(newData.dateTime).format('YYYY-MM-DDTHH:mm:ss');
+    
+    // Divida a data e a hora usando a função split()
+    const [date, time] = formattedDateTime.split('T');
 
-  // Formate a data para incluir apenas a data e a hora
-  const formattedDateTime = moment(newData.dateTime).format('YYYY-MM-DDTHH:mm:ss');
+    await pool.query('INSERT INTO consultas (data_consulta, hora, descricao) VALUES ($1, $2, $3)', [
+        date,
+        time,
+        newData.text
+    ]);
 
-  console.log('Data formatada:', formattedDateTime);
-  console.log('Texto:', newData.text);
-  // Faça o que for necessário com a data formatada e o texto
-});
+    res.send(`Consulta cadastrada com sucesso.`);
 
-app.post('/admin', (req, res) => {
-    const { email, password } = req.body;
-    console.log(email, password);
+    //console.log('Data formatada:', date);
+    //console.log('Hora:', time);
+    //console.log('Texto:', newData.text);
 });
 
 app.listen(3000, () => {
