@@ -21,7 +21,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'UHClinica',
-    password: 'root',
+    password: 'admin',
     port: 5432,
 });
 
@@ -162,8 +162,8 @@ app.post('/alterar', async (req, res) => {
 });
 
 //Requisicao com POST para fazer o delete nas tabelas
-app.post('/excluir', (req, res) => {
-    pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
+app.post('/excluir', async (req, res) => {
+    await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
     console.log('Excluído');
 });
 
@@ -183,6 +183,11 @@ app.post('/agenda', (req, res) => {
   console.log('Data formatada:', formattedDateTime);
   console.log('Texto:', newData.text);
   // Faça o que for necessário com a data formatada e o texto
+});
+
+app.post('/admin', (req, res) => {
+    const { email, password } = req.body;
+    console.log(email, password);
 });
 
 app.listen(3000, () => {

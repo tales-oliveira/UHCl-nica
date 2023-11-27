@@ -33,6 +33,9 @@ function Navbar() {
             <li>
               <Link to="/cadastro">CADASTRAR</Link>
             </li>
+            <li>
+              <Link to="/admin">ADMIN</Link>
+            </li>
           </ul>
         </div>
       ) : (
@@ -53,6 +56,9 @@ function Navbar() {
               </li>
               <li>
                 <Link to="/cadastro">CADASTRAR</Link>
+              </li>
+              <li>
+                <Link to="/admin">ADMIN</Link>
               </li>
             </ul>
           )}

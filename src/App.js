@@ -5,6 +5,7 @@ import Login from './components/pages/Login'
 import SobreNos from './components/pages/SobreNos'
 import Navbar from './components/containers/Navbar'
 import Footer from './components/containers/Footer'
+import Admin from './components/pages/Admin'
 
 
 
@@ -20,6 +21,7 @@ function App() {
               <Route path='/sobrenos' element={<SobreNos/>} />
               <Route path='/login' element={<Login />} />
               <Route path='/cadastro' element={<Cadastro />} />
+              <Route path='/admin' element={<Admin />} />
 
           </Routes>
         

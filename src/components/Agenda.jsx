@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { List, ListItem, ListItemText } from '@mui/material';
 import axios from 'axios';
-import moment from 'moment-timezone';
+// import moment from 'moment-timezone';
 
 const Agenda = () => {
     const [selectedDateTime, setSelectedDateTime] = useState(null);
@@ -25,10 +25,10 @@ const Agenda = () => {
   
     const handleSave = async () => {
       if (selectedDateTime && infoTexto.trim() !== '') {
-        const formattedDateTime = moment(selectedDateTime).utc().format();
+        // const formattedDateTime = moment(selectedDateTime).utc().format();
 
         const newData = {
-          dateTime: formattedDateTime,
+          dateTime: selectedDateTime,
           text: infoTexto.trim(),
         };
   
