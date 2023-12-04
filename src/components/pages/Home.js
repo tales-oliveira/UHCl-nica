@@ -11,7 +11,7 @@ const cards = [
   {
     title: "DR. GILBERTO AZEVEDO",
     imagePath: medicoImage,
-    description: "ENDÓCRINO"
+    description: "CLINICO GERAL"
   },
   {
     title: "DR. JOSÉ ALMEIDA",
@@ -21,22 +21,22 @@ const cards = [
   {
     title: "DRA. ANNA RIBEIRO",
     imagePath: medicoImage3,
-    description: "ENDÓCRINO"
+    description: "DERMATOLOGISTA"
   },
   {
     title: "DR. GILBERTO AZEVEDO",
     imagePath: medicoImage,
-    description: "ENDÓCRINO"
+    description: "CARDIOLOGISTA"
   },
   {
     title: "DR. JOSÉ ALMEIDA",
     imagePath: medicoImage2,
-    description: "ENDÓCRINO"
+    description: "GERIATRA"
   },
   {
     title: "DRA. ANNA RIBEIRO",
     imagePath: medicoImage3,
-    description: "ENDÓCRINO"
+    description: "GINECOLOGISTA"
   },
   
   // Outros cards...

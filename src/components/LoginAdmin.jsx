@@ -36,12 +36,18 @@ export default function LoginAdmin(){
         
         try {
             console.log(data);
-            setMsg('Usuário Autenticado');
-            setIsLoggedIn(true); // Atualiza o estado para indicar que o usuário está autenticado
-            await axios.post('http://localhost:3000/admin', data);
+            console.log(data.email);
+            if (data.email === "admin@hotmail.com"){
+                if (data.password === 123){
+                    setIsLoggedIn(true); // Atualiza o estado para indicar que o usuário está autenticado
+                }
+            }
+            else{
+                setMsg('ADMIN não cadastrado.');
+            }
+            // await axios.post('http://localhost:3000/admin', data);
         } catch (error) {
-            console.log('Deu erro')
-            setMsg(error.response.data);
+            console.log('admin error');
         }   
         
     }

@@ -22,7 +22,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'UHClinica',
-    password: 'root',
+    password: 'admin',
     port: 5432,
 });
 
@@ -251,6 +251,16 @@ app.post('/agenda', async (req, res) => {
     //console.log('Hora:', time);
     //console.log('Texto:', newData.text);
 });
+
+
+app.post('/admin', async (req, res) =>{
+    // const { email, password } = req.body;
+    // if(email === 'admin@hotmail.com'){
+    //     console.log('email ok');
+    // }
+    // console.log('admin');
+    // console.log(email);
+})
 
 app.listen(3000, () => {
     console.log('Servidor na porta 3000');
