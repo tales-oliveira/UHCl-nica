@@ -145,11 +145,7 @@ app.post('/login', async (req,res) => {
 //Requisicao com POST para fazer o update nas tabelas
 app.post('/alterar', async (req, res) => {
     const { novoEmail, novaSenha } = req.body;
-    //console.log(novoEmail, novaSenha);
 
-    //await pool.query('SELECT id_registro FROM medicos WHERE email = $1', [email_atual]);
-    //console.log(m_id);
-    
     try {
         // ----------------------------------------------------------------------------------------
         // MÉDICOS
@@ -157,7 +153,6 @@ app.post('/alterar', async (req, res) => {
         const emailResult = await pool.query('SELECT * FROM medicos WHERE email = $1', [novoEmail]);
         if (emailResult.rows.length > 0) {
             return res.status(409).send(`O novo email '${novoEmail}' já está em uso.`);
-            //console.log(emailResult.id_registro);
         }
 
         // Atualiza a email e/ou senha
@@ -195,13 +190,16 @@ app.post('/alterar', async (req, res) => {
         console.error('Erro na atualização:', error);
         return res.status(500).send('Erro interno no servidor.');
     }
-
-    //res.status(200);
 });
 
 
 //Requisicao com POST para fazer o delete nas tabelas
 app.post('/excluir', async (req, res) => {
+    const { comando } = req.body;
+
+    if(comando === 'deleteAgenda'):
+        await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
+            
     await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
     await pool.query('DELETE FROM pacientes WHERE email = $1', [email_atual]);
     console.log('Excluído');
@@ -224,9 +222,8 @@ app.post('/prontuario', async (req, res) => {
     // Extract and store the id_user in id_atual
     const id_atual = result.rows[0].id_user;
 
-
     console.log(id_atual);
-    console.log( alergias, medicamentos, tipoSanguineo);
+    console.log(alergias, medicamentos, tipoSanguineo);
 });
 
 //Requisição para a agenda
@@ -246,10 +243,6 @@ app.post('/agenda', async (req, res) => {
     ]);
 
     res.send(`Consulta cadastrada com sucesso.`);
-
-    //console.log('Data formatada:', date);
-    //console.log('Hora:', time);
-    //console.log('Texto:', newData.text);
 });
 
 
