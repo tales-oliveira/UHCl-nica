@@ -66,7 +66,7 @@ export default function LoginAdmin(){
                     <button className='botaoLog'>Entrar</button>
 
                     <div>
-                    Conta apenas para adminstradores do site!
+                    Conta apenas para administradores do site!
                     </div>
                     <div>
                     É médico ou paciente?

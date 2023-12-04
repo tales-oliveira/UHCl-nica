@@ -22,7 +22,7 @@ const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'UHClinica',
-    password: 'admin',
+    password: 'root',
     port: 5432,
 });
 

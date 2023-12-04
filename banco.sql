@@ -31,3 +31,9 @@ tipo_sanguineo varchar[3],
 id_paciente int,
 foreign key(id_paciente) references pacientes (id_user)
 )
+
+create table admin(
+id_admin serial primary key,
+email varchar(30) unique not null,
+senha varchar(30) not null
+)
