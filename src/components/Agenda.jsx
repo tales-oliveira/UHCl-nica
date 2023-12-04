@@ -47,7 +47,30 @@ const Agenda = () => {
         await axios.post('http://localhost:3000/agenda', {newData});
       }
     };
+    
+    const handleDelete = async () => {
+      if (selectedDateTime && infoTexto.trim() !== '') {
+        //const formattedDateTime = moment(selectedDateTime).utc().format();
+        const formattedDateTime = moment(selectedDateTime).utc().format('YYYY-MM-DD HH:mm');
+
+        const newData = {
+          dateTime: selectedDateTime,
+          text: infoTexto.trim(),
+        };
   
+
+        // Adiciona a nova entrada à lista de dados salvos
+        setSavedData((prevData) => [...prevData, newData]);
+  
+        // Limpa os campos após salvar
+        setSelectedDateTime(null);
+        setInfoTexto('');
+
+        console.log(newData);
+        await axios.post('http://localhost:3000/agenda', {newData});
+      }
+    };
+
     return (
       <Box>
         <MuiLocalizationProvider dateAdapter={AdapterDayjs}>
@@ -70,6 +93,10 @@ const Agenda = () => {
           <Button variant="contained" color="primary" onClick={handleSave} mt={2}>
             Salvar
           </Button>
+
+          <Button variant="contained" color="primary" onClick={handleDelete} mt={2}>
+            Excluir
+          </Button>
         </Box>
   
         {savedData.length > 0 && (
@@ -80,7 +107,6 @@ const Agenda = () => {
                 <ListItem key={index}>
                   <ListItemText
                     primary={`Data e Hora: ${moment(data.dateTime).format('DD/MM/YYYY HH:mm')}`}
-                   // primary={`Data e Hora: ${data.dateTime.format('DD/MM/YYYY HH:mm')}`}
                     secondary={`Texto: ${data.text}`}
                   />
                 </ListItem>
