@@ -197,9 +197,9 @@ app.post('/alterar', async (req, res) => {
 app.post('/excluir', async (req, res) => {
     const { comando } = req.body;
 
-    if(comando === 'deleteAgenda'):
+    if(comando === 'deleteAgenda'){
         await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
-            
+    }
     await pool.query('DELETE FROM medicos WHERE email = $1', [email_atual]);
     await pool.query('DELETE FROM pacientes WHERE email = $1', [email_atual]);
     console.log('Excluído');
